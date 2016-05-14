@@ -114,10 +114,10 @@ class Brain:
     def learn(self, text):
         """Learn a string of text. If the input is not already
         Unicode, it will be decoded as utf-8."""
-        if type(text) != types.UnicodeType:
+#        if type(text) != types.UnicodeType:
             # Assume that non-Unicode text is encoded as utf-8, which
             # should be somewhat safe in the modern world.
-            text = text.decode("utf-8", "ignore")
+#            text = text.decode("utf-8", "ignore")
 
         tokens = self.tokenizer.split(text)
         trace("Brain.learn_input_token_count", len(tokens))
@@ -197,10 +197,10 @@ with its two nodes"""
     def reply(self, text, loop_ms=500, max_len=None):
         """Reply to a string of text. If the input is not already
         Unicode, it will be decoded as utf-8."""
-        if type(text) != types.UnicodeType:
+#        if type(text) != types.UnicodeType:
             # Assume that non-Unicode text is encoded as utf-8, which
             # should be somewhat safe in the modern world.
-            text = text.decode("utf-8", "ignore")
+ #           text = text.decode("utf-8", "ignore")
 
         tokens = self.tokenizer.split(text)
         input_ids = map(self.graph.get_token_by_text, tokens)
@@ -349,7 +349,7 @@ with its two nodes"""
     def _pick_pivot(self, pivot_ids):
         pivot = random.choice(tuple(pivot_ids))
 
-        if type(pivot) is types.TupleType:
+        if type(pivot) is tuple:
             # the input word was stemmed to several things
             pivot = random.choice(pivot)
 
@@ -375,7 +375,7 @@ with its two nodes"""
             pivot_id = self._pick_pivot(pivot_ids)
             node = graph.get_random_node_with_token(pivot_id)
 
-            parts = itertools.izip_longest(search(node, end, 1),
+            parts = itertools.zip_longest(search(node, end, 1),
                                            search(node, end, 0),
                                            fillvalue=None)
 
@@ -524,7 +524,7 @@ class Graph:
         if len(seq) == 1:
             # Grab the first item from seq. Use an iterator so this works
             # with sets as well as lists.
-            return "(%s)" % iter(seq).next()
+            return "(%s)" % iter(seq).__next__()
 
         return str(tuple(seq))
 
@@ -867,3 +867,4 @@ CREATE TRIGGER IF NOT EXISTS edges_update_trigger AFTER UPDATE ON edges
 CREATE TRIGGER IF NOT EXISTS edges_delete_trigger AFTER DELETE ON edges
     BEGIN UPDATE nodes SET count = count - old.count
         WHERE nodes.id = OLD.next_node; END;""")
+
